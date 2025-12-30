@@ -1,0 +1,17 @@
+name: Trigger Daily Report
+
+on:
+  schedule:
+    # Se ejecuta a las 9:00 AM UTC de Lunes a Viernes.
+    # 9:00 AM UTC son las 5:00 AM en Caracas (UTC-4).
+    - cron: '0 9 * * 1-5'
+  workflow_dispatch: # Permite ejecutarlo manualmente desde la pestaña "Actions" en GitHub
+
+jobs:
+  trigger_report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Render URL to trigger report
+        # Usamos curl para visitar la URL secreta.
+        # El secreto se obtiene de los "Repository Secrets" de GitHub, no se escribe aquí directamente.
+        run: curl -s "https://chatbot-whatssap.onrender.com/trigger-report?secret=${{ secrets.CRON_SECRET }}"

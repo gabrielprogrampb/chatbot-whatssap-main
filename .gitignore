@@ -1,0 +1,8 @@
+# Dependencias
+node_modules
+
+# Archivos de entorno (contiene secretos)
+.env
+
+# Archivos de sesión de Baileys
+auth_info_baileys
