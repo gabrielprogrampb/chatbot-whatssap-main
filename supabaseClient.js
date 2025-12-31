@@ -1,4 +1,5 @@
 // supabaseClient.js
+// Cliente de Supabase para conexión con la base de datos
 
 // Importamos las librerías necesarias
 const { createClient } = require('@supabase/supabase-js');

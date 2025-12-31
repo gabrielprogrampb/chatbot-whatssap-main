@@ -24,7 +24,7 @@ async function executeEmergencyCall(sock, from) {
         numero_turno: 'EMERGENCIA' // Opcional, para identificar
     });
 
-    await sock.sendMessage(from, { text: "Detecté una emergencia. Por favor, comunícate directamente al siguiente número:\n*0265-8053063*" });
+    await sock.sendMessage(from, { text: "Detecté una emergencia. Por favor, comunícate directamente al siguiente número:\n*0000-0000000*" });
 }
 
 // =================================================================================
