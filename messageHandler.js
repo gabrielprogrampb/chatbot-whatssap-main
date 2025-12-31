@@ -7,6 +7,7 @@ const { transcribeAudio, processConversationWithAI } = require('./aiHandler');
 require('dotenv').config();
 
 const userState = {};
+const authenticatedAdmins = new Set(); // Almacena números de WhatsApp que han hecho /login exitosamente
 
 /**
  * Envía un mensaje de emergencia con el número de contacto y finaliza la conversación.
@@ -256,8 +257,25 @@ async function handleMessage(sock, msg) {
     let originalText = (msg.message?.conversation || msg.message?.extendedTextMessage?.text || '').trim();
 
     const adminNumber = `${process.env.REPORT_WHATSAPP_NUMBER}@s.whatsapp.net`;
+    const isAdmin = from === adminNumber || authenticatedAdmins.has(from);
 
-    if (originalText.toLowerCase().startsWith('/reporte-mensual') && from === adminNumber) {
+    // --- COMANDO DE LOGIN ---
+    if (originalText.toLowerCase().startsWith('/login')) {
+        const parts = originalText.split(' ');
+        const password = parts[1];
+        const correctPassword = process.env.ADMIN_PASSWORD || '2025';
+
+        if (password === correctPassword) {
+            authenticatedAdmins.add(from);
+            await sock.sendMessage(from, { text: "✅ Autenticación exitosa. Ahora tienes acceso a los comandos de administrador." });
+            return;
+        } else {
+            await sock.sendMessage(from, { text: "❌ Contraseña incorrecta." });
+            return;
+        }
+    }
+
+    if (originalText.toLowerCase().startsWith('/reporte-mensual') && isAdmin) {
         const parts = originalText.split(' ');
         let mesString = new Date().toISOString().slice(0, 7); // YYYY-MM actual por defecto
         if (parts.length > 1 && /^\d{4}-\d{2}$/.test(parts[1])) {
@@ -268,7 +286,7 @@ async function handleMessage(sock, msg) {
         return;
     }
 
-    if (originalText.toLowerCase().startsWith('/reporte') && from === adminNumber) {
+    if (originalText.toLowerCase().startsWith('/reporte') && isAdmin) {
         const parts = originalText.split(' ');
         let fechaString = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Caracas' });
         if (parts.length > 1 && /^\d{4}-\d{2}-\d{2}$/.test(parts[1])) {

@@ -55,6 +55,14 @@ RESEND_API_KEY=tu_api_key
 REPORT_EMAIL=email@ejemplo.com
 ```
 
+### Autenticación de Administrador (Opcional)
+```env
+# Número predeterminado que no necesita login
+REPORT_WHATSAPP_NUMBER=1234567890
+# Contraseña para autorizar otros números vía /login
+ADMIN_PASSWORD=2025
+```
+
 ## 🏃 Ejecución
 
 ```bash
@@ -70,14 +78,22 @@ Al iniciar, verás uno de estos mensajes:
 
 ## 📱 Comandos de Administrador
 
-Envía estos comandos desde el número configurado en `REPORT_WHATSAPP_NUMBER`:
+Existen dos formas de estar autorizado para usar comandos administrativos:
+1. Ser el número configurado en `REPORT_WHATSAPP_NUMBER`.
+2. Usar el comando `/login <contraseña>` (usando la clave definida en `ADMIN_PASSWORD`).
+
+### Comandos Disponibles
 
 | Comando | Descripción |
 |---------|-------------|
+| `/login 2025` | Autoriza tu número actual como administrador |
 | `/reporte` | Genera reporte del día anterior |
 | `/reporte 2024-01-15` | Genera reporte de fecha específica |
 | `/reporte-mensual` | Genera reporte del mes actual |
 | `/reporte-mensual 2024-01` | Genera reporte de mes específico |
+
+> [!NOTE]
+> La sesión de `/login` es temporal y se pierde si el bot se reinicia.
 
 ## 🗂️ Estructura del Proyecto
 
